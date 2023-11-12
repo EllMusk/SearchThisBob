@@ -18,7 +18,7 @@ function performSearch() {
     var query = document.getElementById('searchQuery').value;
     var api_key = 'AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s';
     var cx = 'f0678ce663ba24a3b';
-    var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${api_key}&cx=${cx}`;
+    var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s}&cx=${cx}`;
 
     fetch(url)
         .then(response => response.json())
