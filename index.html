@@ -19,7 +19,7 @@ function performSearch() {
     var query = document.getElementById('searchQuery').value;
     var api_key = 'AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s'; // Replace with your actual API key
     var cx = 'f0678ce663ba24a3b'; // Replace with your actual Custom Search Engine ID
-    var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s}&cx=${cx}`;
+    var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${api_key}&cx=${cx}`;
 
     fetch(url)
         .then(response => response.json())
