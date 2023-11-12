@@ -34,13 +34,13 @@ function displayResults(data) {
     data.items.forEach(item => {
         var element = document.createElement('div');
 
-        // Adding image if available
+
         if (item.pagemap && item.pagemap.cse_image && item.pagemap.cse_image.length > 0) {
             var imgSrc = item.pagemap.cse_image[0].src;
             element.innerHTML += `<img src="${imgSrc}" alt="Image" style="max-width:100px; max-height:100px;">`;
         }
 
-        // Adding title and snippet
+
         element.innerHTML += `<h2><a href="${item.link}">${item.title}</a></h2><p>${item.snippet}</p>`;
 
         resultsDiv.appendChild(element);
