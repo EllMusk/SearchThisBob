@@ -14,5 +14,30 @@
         <input type="submit" value="Search" class="search-button">
     </form>
 </div>
+<script>
+function performSearch() {
+    var query = document.getElementById('searchQuery').value;
+    var api_key = 'AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s'; // Replace with your actual API key
+    var cx = 'f0678ce663ba24a3b'; // Replace with your actual Custom Search Engine ID
+    var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${api_key}&cx=${cx}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            displayResults(data);
+        });
+}
+
+function displayResults(data) {
+    var resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = '';
+
+    data.items.forEach(item => {
+        var element = document.createElement('div');
+        element.innerHTML = `<h2><a href="${item.link}">${item.title}</a></h2><p>${item.snippet}</p>`;
+        resultsDiv.appendChild(element);
+    });
+}
+</script>
 </body>
 </html>
