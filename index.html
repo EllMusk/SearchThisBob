@@ -13,11 +13,12 @@
     <button onclick="performSearch()" class="search-button">Search</button>
     <div id="results"></div>
 </div>
+
 <script>
 function performSearch() {
     var query = document.getElementById('searchQuery').value;
-    var api_key = 'AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s';
-    var cx = 'f0678ce663ba24a3b';
+    var api_key = 'AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s'; // Replace with your actual API key
+    var cx = 'f0678ce663ba24a3b'; // Replace with your actual Custom Search Engine ID
     var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s}&cx=${cx}`;
 
     fetch(url)
@@ -34,12 +35,14 @@ function displayResults(data) {
     data.items.forEach(item => {
         var element = document.createElement('div');
 
-        if (item.pagemap && item.pagemap.cse_image && item.pagemap.cse_image.length > 0) {
-            var imgSrc = item.pagemap.cse_image[0].src;
-            element.innerHTML += `<img src="${imgSrc}" alt="Image" style="max-width:100px; max-height:100px;">`;
+        // Checking for and adding thumbnail images
+        if (item.pagemap && item.pagemap.cse_thumbnail && item.pagemap.cse_thumbnail.length > 0) {
+            var imgSrc = item.pagemap.cse_thumbnail[0].src;
+            element.innerHTML += `<img src="${imgSrc}" alt="Thumbnail" style="max-width:100px; max-height:100px; margin-right: 10px; float: left;">`;
         }
 
-        element.innerHTML += `<h2><a href="${item.link}">${item.title}</a></h2><p>${item.snippet}</p>`;
+        // Adding title and snippet
+        element.innerHTML += `<h2><a href="${item.link}">${item.title}</a></h2><p>${item.snippet}</p><div style="clear: both;"></div>`;
 
         resultsDiv.appendChild(element);
     });
