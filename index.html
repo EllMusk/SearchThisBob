@@ -1,52 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>searchthisbob.com</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>searchthisbob.com</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-    <img src="IMG_4611.PNG" alt="Your Logo" class="logo">
-    <input type="text" id="searchQuery" class="search-bar" placeholder="Bobtoshi is a G...">
-    <button onclick="performSearch()" class="search-button">Search</button>
-    <div id="results"></div>
-</div>
+    <div class="container">
+        <div class="header">
+            <img src="IMG_4611.PNG" alt="Your Logo" class="logo">
+        </div>
+        <div class="search-container">
+            <input type="text" id="searchQuery" class="search-bar" placeholder="Search...">
+            <button onclick="performSearch()" class="search-button">Search</button>
+        </div>
+        <div id="results"></div>
+    </div>
 
-<script>
-function performSearch() {
-    var query = document.getElementById('searchQuery').value;
-    var api_key = 'AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s'; // Replace with your actual API key
-    var cx = 'f0678ce663ba24a3b'; // Replace with your actual Custom Search Engine ID
-    var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${api_key}&cx=${cx}`;
+    <script>
+    function performSearch() {
+        var query = document.getElementById('searchQuery').value;
+        var api_key = 'AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s'; // Replace with your actual API key
+        var cx = 'f0678ce663ba24a3b'; // Replace with your actual Custom Search Engine ID
+        var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${api_key}&cx=${cx}`;
 
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            displayResults(data);
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                displayResults(data);
+            });
+    }
+
+    function displayResults(data) {
+        var resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';
+
+        data.items.forEach(item => {
+            var element = document.createElement('div');
+            element.classList.add('search-result');
+
+            // Adding thumbnail images
+            if (item.pagemap && item.pagemap.cse_thumbnail && item.pagemap.cse_thumbnail.length > 0) {
+                var imgSrc = item.pagemap.cse_thumbnail[0].src;
+                element.innerHTML += `<img src="${imgSrc}" alt="Thumbnail" class="thumbnail">`;
+            }
+
+            // Adding title and snippet
+            element.innerHTML += `<h2><a href="${item.link}" class="result-title">${item.title}</a></h2><p class="result-snippet">${item.snippet}</p>`;
+
+            resultsDiv.appendChild(element);
         });
-}
-
-function displayResults(data) {
-    var resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = '';
-
-    data.items.forEach(item => {
-        var element = document.createElement('div');
-
-        // Checking for and adding thumbnail images
-        if (item.pagemap && item.pagemap.cse_thumbnail && item.pagemap.cse_thumbnail.length > 0) {
-            var imgSrc = item.pagemap.cse_thumbnail[0].src;
-            element.innerHTML += `<img src="${imgSrc}" alt="Thumbnail" style="max-width:100px; max-height:100px; margin-right: 10px; float: left;">`;
-        }
-
-        // Adding title and snippet
-        element.innerHTML += `<h2><a href="${item.link}">${item.title}</a></h2><p>${item.snippet}</p><div style="clear: both;"></div>`;
-
-        resultsDiv.appendChild(element);
-    });
-}
-</script>
+    }
+    </script>
 </body>
 </html>
