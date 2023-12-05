@@ -15,6 +15,7 @@
         <button onclick="performSearch()" class="search-button">Search</button>
     </div>
     <div id="results"></div>
+    <div id="suggestions"></div>
     <div id="pagination"></div>
 
     <script>
@@ -33,6 +34,7 @@
             .then(response => response.json())
             .then(data => {
                 displayResults(data);
+                displaySuggestions(data);
                 displayPagination(data.queries);
             });
     }
@@ -45,19 +47,24 @@
             var element = document.createElement('div');
             element.classList.add('search-result');
 
-            // Adding thumbnail images
-            if (item.pagemap && item.pagemap.cse_thumbnail && item.pagemap.cse_thumbnail.length > 0) {
-                var imgSrc = item.pagemap.cse_thumbnail[0].src;
-                element.innerHTML += `<img src="${imgSrc}" alt="Thumbnail" class="thumbnail">`;
-            }
-
-            // Adding title, link, and snippet
+            // Adding title, link, snippet, and meta information
             element.innerHTML += `<h2><a href="${item.link}" class="result-title">${item.title}</a></h2>`;
             element.innerHTML += `<a href="${item.link}" class="result-link">${item.displayLink}</a>`;
             element.innerHTML += `<p class="result-snippet">${item.snippet}</p>`;
+            if (item.pagemap) {
+                var metaInfo = item.pagemap.metatags && item.pagemap.metatags[0];
+                if (metaInfo) {
+                    element.innerHTML += `<div class="meta-info">${metaInfo['og:description'] || ''}</div>`;
+                }
+            }
 
             resultsDiv.appendChild(element);
         });
+    }
+
+    function displaySuggestions(data) {
+        // Implement logic to display "People also ask" section
+        // This requires processing and interpreting additional data
     }
 
     function displayPagination(queries) {
