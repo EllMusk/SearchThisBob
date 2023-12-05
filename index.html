@@ -7,28 +7,33 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <img src="IMG_4611.PNG" alt="Your Logo" class="logo">
-        </div>
-        <div class="search-container">
-            <input type="text" id="searchQuery" class="search-bar" placeholder="Search...">
-            <button onclick="performSearch()" class="search-button">Search</button>
-        </div>
-        <div id="results"></div>
+    <div class="header">
+        <img src="IMG_4611.PNG" alt="Your Logo" class="logo">
     </div>
+    <div class="search-container">
+        <input type="text" id="searchQuery" class="search-bar" placeholder="Search...">
+        <button onclick="performSearch()" class="search-button">Search</button>
+    </div>
+    <div id="results"></div>
+    <div id="pagination"></div>
 
     <script>
-    function performSearch() {
+    var currentPage = 1;
+    var itemsPerPage = 10;
+
+    function performSearch(page = 1) {
+        currentPage = page;
         var query = document.getElementById('searchQuery').value;
         var api_key = 'AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s'; // Replace with your actual API key
         var cx = 'f0678ce663ba24a3b'; // Replace with your actual Custom Search Engine ID
-        var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${api_key}&cx=${cx}`;
+        var startIndex = (page - 1) * itemsPerPage + 1;
+        var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${api_key}&cx=${cx}&start=${startIndex}`;
 
         fetch(url)
             .then(response => response.json())
             .then(data => {
                 displayResults(data);
+                displayPagination(data.queries);
             });
     }
 
@@ -46,11 +51,40 @@
                 element.innerHTML += `<img src="${imgSrc}" alt="Thumbnail" class="thumbnail">`;
             }
 
-            // Adding title and snippet
-            element.innerHTML += `<h2><a href="${item.link}" class="result-title">${item.title}</a></h2><p class="result-snippet">${item.snippet}</p>`;
+            // Adding title, link, and snippet
+            element.innerHTML += `<h2><a href="${item.link}" class="result-title">${item.title}</a></h2>`;
+            element.innerHTML += `<a href="${item.link}" class="result-link">${item.displayLink}</a>`;
+            element.innerHTML += `<p class="result-snippet">${item.snippet}</p>`;
 
             resultsDiv.appendChild(element);
         });
+    }
+
+    function displayPagination(queries) {
+        var paginationDiv = document.getElementById('pagination');
+        paginationDiv.innerHTML = '';
+
+        if (queries.nextPage || queries.previousPage) {
+            var nav = document.createElement('nav');
+            nav.classList.add('pagination-nav');
+
+            // Previous Page
+            if (queries.previousPage) {
+                var prevPage = queries.previousPage[0].startIndex / itemsPerPage;
+                nav.innerHTML += `<button onclick="performSearch(${prevPage})">Previous</button>`;
+            }
+
+            // Current Page
+            nav.innerHTML += `<span>Page ${currentPage}</span>`;
+
+            // Next Page
+            if (queries.nextPage) {
+                var nextPage = queries.nextPage[0].startIndex / itemsPerPage;
+                nav.innerHTML += `<button onclick="performSearch(${nextPage})">Next</button>`;
+            }
+
+            paginationDiv.appendChild(nav);
+        }
     }
     </script>
 </body>
