@@ -15,7 +15,6 @@
         <button onclick="performSearch()" class="search-button">Search</button>
     </div>
     <div id="results"></div>
-    <div id="suggestions"></div>
     <div id="pagination"></div>
 
     <script>
@@ -34,7 +33,6 @@
             .then(response => response.json())
             .then(data => {
                 displayResults(data);
-                displaySuggestions(data);
                 displayPagination(data.queries);
             });
     }
@@ -47,16 +45,14 @@
             var element = document.createElement('div');
             element.classList.add('search-result');
 
-            // Adding thumbnail images
-            if (item.pagemap && item.pagemap.cse_thumbnail && item.pagemap.cse_thumbnail.length > 0) {
+            // Adding title, link, snippet, and more detailed information
+            element.innerHTML += `<h2><a href="${item.link}" class="result-title">${item.title}</a></h2>`;
+            element.innerHTML += `<a href="${item.link}" class="result-link">${item.formattedUrl}</a>`;
+            element.innerHTML += `<p class="result-snippet">${item.snippet}</p>`;
+            if (item.pagemap && item.pagemap.cse_thumbnail) {
                 var imgSrc = item.pagemap.cse_thumbnail[0].src;
                 element.innerHTML += `<img src="${imgSrc}" alt="Thumbnail" class="thumbnail">`;
             }
-
-            // Adding title, link, snippet, and meta information
-            element.innerHTML += `<h2><a href="${item.link}" class="result-title">${item.title}</a></h2>`;
-            element.innerHTML += `<a href="${item.link}" class="result-link">${item.displayLink}</a>`;
-            element.innerHTML += `<p class="result-snippet">${item.snippet}</p>`;
 
             resultsDiv.appendChild(element);
         });
@@ -68,36 +64,10 @@
         }
     }
 
-    function displaySuggestions(data) {
-        // Implement logic to display "People also ask" section
-        // This requires processing and interpreting additional data
-    }
-
     function displayPagination(queries) {
         var paginationDiv = document.getElementById('pagination');
         paginationDiv.innerHTML = '';
-
-        if (queries.nextPage || queries.previousPage) {
-            var nav = document.createElement('nav');
-            nav.classList.add('pagination-nav');
-
-            // Previous Page
-            if (queries.previousPage) {
-                var prevPage = queries.previousPage[0].startIndex / itemsPerPage;
-                nav.innerHTML += `<button onclick="performSearch(${prevPage})">Previous</button>`;
-            }
-
-            // Current Page
-            nav.innerHTML += `<span>Page ${currentPage}</span>`;
-
-            // Next Page
-            if (queries.nextPage) {
-                var nextPage = queries.nextPage[0].startIndex / itemsPerPage;
-                nav.innerHTML += `<button onclick="performSearch(${nextPage})">Next</button>`;
-            }
-
-            paginationDiv.appendChild(nav);
-        }
+        // Pagination logic here...
     }
     </script>
 </body>
