@@ -151,7 +151,18 @@ function draw() {
     requestAnimationFrame(draw);
 }
 
-document.getElementById('startButton').addEventListener('click', () => {
-    document.getElementById('gameContainer').style.display = 'none';
-    draw();
-});
+function startGame() {
+    document.getElementById('titleScreen').hidden = true;
+    document.getElementById('startButton').hidden = true;
+    document.getElementById('breakoutCanvas').hidden = false;
+    document.getElementById('scoreBoard').hidden = false;
+
+    // Reset score and other game variables
+    score = 0;
+    // More game reset logic here if necessary
+
+    draw(); // Start the game loop
+}
+
+// Event listener for the Start Game button
+document.getElementById('startButton').addEventListener('click', startGame);
