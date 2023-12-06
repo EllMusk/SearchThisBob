@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.height = 400;
 
     let ball = new Image();
-    ball.src = 'path_to_your_character_head_image.png';
+    ball.src = 'IMG_4611 copy.PNG';
     let ballSize = 30;
 
     let ballX = canvas.width / 2 - ballSize / 2;
