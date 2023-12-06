@@ -1,74 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>searchthisbob.com</title>
+    <title>Character Head Pong Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="header">
-        <img src="IMG_4611.PNG" alt="Your Logo" class="logo">
-    </div>
-    <div class="search-container">
-        <input type="text" id="searchQuery" class="search-bar" placeholder="Search..." onkeypress="searchOnEnter(event)">
-        <button onclick="performSearch()" class="search-button">Search</button>
-    </div>
-    <div id="results"></div>
-    <div id="pagination"></div>
-
-    <script>
-    var currentPage = 1;
-    var itemsPerPage = 10;
-
-    function performSearch(page = 1) {
-        currentPage = page;
-        var query = document.getElementById('searchQuery').value;
-        var api_key = 'AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s'; // Replace with your actual API key
-        var cx = 'f0678ce663ba24a3b'; // Replace with your actual Custom Search Engine ID
-        var startIndex = (page - 1) * itemsPerPage + 1;
-        var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${api_key}&cx=${cx}&start=${startIndex}`;
-
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                displayResults(data);
-                displayPagination(data.queries);
-            });
-    }
-
-    function displayResults(data) {
-        var resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = '';
-
-        data.items.forEach(item => {
-            var element = document.createElement('div');
-            element.classList.add('search-result');
-
-            // Adding title, link, snippet, and more detailed information
-            element.innerHTML += `<h2><a href="${item.link}" class="result-title">${item.title}</a></h2>`;
-            element.innerHTML += `<a href="${item.link}" class="result-link">${item.formattedUrl}</a>`;
-            element.innerHTML += `<p class="result-snippet">${item.snippet}</p>`;
-            if (item.pagemap && item.pagemap.cse_thumbnail) {
-                var imgSrc = item.pagemap.cse_thumbnail[0].src;
-                element.innerHTML += `<img src="${imgSrc}" alt="Thumbnail" class="thumbnail">`;
-            }
-
-            resultsDiv.appendChild(element);
-        });
-    }
-
-    function searchOnEnter(event) {
-        if (event.key === "Enter") {
-            performSearch();
-        }
-    }
-
-    function displayPagination(queries) {
-        var paginationDiv = document.getElementById('pagination');
-        paginationDiv.innerHTML = '';
-        // Pagination logic here...
-    }
-    </script>
+    <canvas id="pongCanvas"></canvas>
+    <script src="game.js"></script>
 </body>
 </html>
