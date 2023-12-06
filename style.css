@@ -27,10 +27,21 @@ body, html {
     font-size: 1.5em;
     padding: 10px 20px;
     margin-bottom: 20px;
+    cursor: pointer;
+    background-color: #0095DD;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    outline: none;
+}
+
+#startButton:hover {
+    background-color: #007ACC;
 }
 
 canvas {
     border: 1px solid #fff;
+    background-color: #222;
 }
 
 #scoreBoard {
@@ -39,4 +50,9 @@ canvas {
     left: 50%;
     transform: translateX(-50%);
     font-size: 1em;
+}
+
+/* Initially hide canvas and scoreboard until the game starts */
+#breakoutCanvas, #scoreBoard {
+    display: none;
 }
