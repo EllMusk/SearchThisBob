@@ -3,15 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bob Breakout</title>
+    <title>Snake Game</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
 </head>
 <body>
-    <canvas id="breakoutCanvas"></canvas>
-    <div id="scoreBoard">
-        Score: <span id="score">0</span>
-        High Score: <span id="highScore">0</span>
+    <div id="game-container">
+        <canvas id="snakeGame"></canvas>
     </div>
-    <script src="game.js"></script>
+    <input type="file" id="imageUpload" accept="image/*">
+    <div id="controls">
+        <button id="up">Up</button>
+        <button id="down">Down</button>
+        <button id="left">Left</button>
+        <button id="right">Right</button>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
