@@ -1,17 +1,23 @@
 body, html {
     margin: 0;
     padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: #000; /* Black background as seen in the image */
+}
+
+#gameContainer {
+    position: relative;
     width: 100%;
     height: 100%;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #000;
 }
 
 canvas {
-    width: 100%;
-    height: 100%;
-    background-color: #222;
+    background-color: transparent; /* The canvas itself should be transparent to allow the black background */
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
