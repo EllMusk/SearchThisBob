@@ -7,36 +7,9 @@ body, html {
     background-color: #000;
     font-family: Arial, sans-serif;
     color: #fff;
-}
-
-#gameContainer {
-    height: 100%;
-    width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-}
-
-#titleScreen {
-    font-size: 2em;
-    margin-bottom: 20px;
-}
-
-#startButton {
-    font-size: 1.5em;
-    padding: 10px 20px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    background-color: #0095DD;
-    border: none;
-    color: white;
-    border-radius: 5px;
-    outline: none;
-}
-
-#startButton:hover {
-    background-color: #007ACC;
+    align-items: center;
 }
 
 canvas {
@@ -50,9 +23,4 @@ canvas {
     left: 50%;
     transform: translateX(-50%);
     font-size: 1em;
-}
-
-/* Initially hide canvas and scoreboard until the game starts */
-#breakoutCanvas, #scoreBoard {
-    display: none;
 }
