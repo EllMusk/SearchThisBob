@@ -8,73 +8,80 @@
 </head>
 <body>
     <div class="header">
-        <div class="header-link left-link">
+        <div class="header-link">
             <a href="https://opensea.io/collection/boredbobs" target="_blank">Bored Bobs NFTs</a>
         </div>
         <img src="IMG_4611.PNG" alt="Your Logo" class="logo">
-        <div class="header-link right-link">
+        <div class="header-link">
             <a href="https://twitter.com/Bobtoshi69" target="_blank">My X Account</a>
         </div>
     </div>
     <div class="search-container">
-        <input type="text" id="searchQuery" class="search-bar" placeholder="Bobtoshi is a G..." onkeypress="searchOnEnter(event)">
+        <input type="text" id="searchQuery" class="search-bar" placeholder="Search..." onkeypress="searchOnEnter(event)">
         <button onclick="performSearch()" class="search-button">Search</button>
     </div>
     <div id="results"></div>
     <div id="pagination"></div>
 
     <script>
-    var currentPage = 1;
-    var itemsPerPage = 10;
+        var currentPage = 1;
+        var itemsPerPage = 10;
 
-    function performSearch(page = 1) {
-        currentPage = page;
-        var query = document.getElementById('searchQuery').value;
-        var api_key = 'AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s'; // Replace with your actual API key
-        var cx = 'f0678ce663ba24a3b'; // Replace with your actual Custom Search Engine ID
-        var startIndex = (page - 1) * itemsPerPage + 1;
-        var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${api_key}&cx=${cx}&start=${startIndex}`;
+        function performSearch(page = 1) {
+            currentPage = page;
+            var query = document.getElementById('searchQuery').value;
+            var api_key = 'AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s'; // Replace with your actual API key
+            var cx = 'f0678ce663ba24a3b'; // Replace with your actual Custom Search Engine ID
+            var startIndex = (page - 1) * itemsPerPage + 1;
+            var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${api_key}&cx=${cx}&start=${startIndex}`;
 
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                displayResults(data);
-                displayPagination(data.queries);
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    displayResults(data);
+                    displayPagination(data.queries);
+                });
+        }
+
+        function displayResults(data) {
+            var resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            data.items.forEach(item => {
+                var element = document.createElement('div');
+                element.classList.add('search-result');
+                element.innerHTML += `<h2><a href="${item.link}" class="result-title">${item.title}</a></h2>`;
+                element.innerHTML += `<a href="${item.link}" class="result-link">${item.formattedUrl}</a>`;
+                element.innerHTML += `<p class="result-snippet">${item.snippet}</p>`;
+                resultsDiv.appendChild(element);
             });
-    }
+        }
 
-    function displayResults(data) {
-        var resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = '';
+        function displayPagination(queries) {
+            var paginationDiv = document.getElementById('pagination');
+            paginationDiv.innerHTML = '';
 
-        data.items.forEach(item => {
-            var element = document.createElement('div');
-            element.classList.add('search-result');
-
-            // Adding title, link, snippet, and more detailed information
-            element.innerHTML += `<h2><a href="${item.link}" class="result-title">${item.title}</a></h2>`;
-            element.innerHTML += `<a href="${item.link}" class="result-link">${item.formattedUrl}</a>`;
-            element.innerHTML += `<p class="result-snippet">${item.snippet}</p>`;
-            if (item.pagemap && item.pagemap.cse_thumbnail) {
-                var imgSrc = item.pagemap.cse_thumbnail[0].src;
-                element.innerHTML += `<img src="${imgSrc}" alt="Thumbnail" class="thumbnail">`;
+            if (queries.request[0].startIndex > 1) {
+                var prevPage = currentPage - 1;
+                paginationDiv.innerHTML += `<button onclick="performSearch(${prevPage})">Previous</button>`;
             }
 
-            resultsDiv.appendChild(element);
-        });
-    }
+            var totalPages = Math.ceil(queries.request[0].totalResults / itemsPerPage);
+            for (var i = 1; i <= totalPages; i++) {
+                paginationDiv.innerHTML += `<button onclick="performSearch(${i})">${i}</button>`;
+            }
 
-    function searchOnEnter(event) {
-        if (event.key === "Enter") {
-            performSearch();
+            if (queries.request[0].startIndex + itemsPerPage - 1 < queries.request[0].totalResults) {
+                var nextPage = currentPage + 1;
+                paginationDiv.innerHTML += `<button onclick="performSearch(${nextPage})">Next</button>`;
+            }
         }
-    }
 
-    function displayPagination(queries) {
-        var paginationDiv = document.getElementById('pagination');
-        paginationDiv.innerHTML = '';
-        // Pagination logic here...
-    }
+        function searchOnEnter(event) {
+            if (event.key === "Enter") {
+                performSearch();
+            }
+        }
     </script>
 </body>
 </html>
