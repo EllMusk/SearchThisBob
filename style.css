@@ -1,32 +1,112 @@
-/* Add your existing styles here */
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #f1f1f1;
-}
-
-.header-link {
+body {
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f8f8f8;
+    text-align: center;
 }
 
-.left-link a, .right-link a {
-    color: #007bff;
+.header {
+    background-color: #f1f1f1;
+    padding: 20px;
+}
+
+.header-link a {
+    color: darkgreen;
     text-decoration: none;
     font-weight: bold;
+    font-size: 20px;
+    text-shadow: 2px 2px #2e8b57;
+    display: block;
+    margin-bottom: 10px;
 }
 
-.left-link a:hover, .right-link a:hover {
-    text-decoration: underline;
+.header-link a:hover {
+    color: #2e8b57;
 }
 
 .logo {
     max-width: 300px;
     height: auto;
-    margin: 0 auto; /* Centers the logo */
+    margin: 10px auto;
+    display: block;
 }
 
-/* Continue with your existing styles */
+.search-container {
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.search-bar {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 24px;
+    margin-bottom: 20px;
+}
+
+.search-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#results {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.search-result {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.search-result:last-child {
+    border-bottom: none;
+}
+
+.result-title {
+    color: #1a0dab;
+    font-size: 18px;
+}
+
+.result-title:hover {
+    text-decoration: underline;
+}
+
+.result-link {
+    color: #006621;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.result-snippet {
+    color: #545454;
+    font-size: 14px;
+}
+
+#pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#pagination button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#pagination button:hover {
+    background-color: #e8e8e8;
+}
