@@ -30,8 +30,8 @@
         function performSearch(page = 1) {
             currentPage = page;
             var query = document.getElementById('searchQuery').value;
-            var api_key = 'AIzaSyCCzC0NpHjxO2qila6BkRPABluXAvOk40s'; // Replace with your actual API key
-            var cx = 'f0678ce663ba24a3b'; // Replace with your actual Custom Search Engine ID
+            var api_key = 'AIzaSyAHZ1jgE2pzEDCFuhg2GgE-OfPDlS5ehIU'; // Replace with your actual API key
+            var cx = '454405163656-p26aqm9l183r02fbo8smqshnsgncc2q1.apps.googleusercontent.com'; // Replace with your actual Custom Search Engine ID
             var startIndex = (page - 1) * itemsPerPage + 1;
             var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${api_key}&cx=${cx}&start=${startIndex}`;
 
