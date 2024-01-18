@@ -3,85 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>searchthisbob.com</title>
+    <title>Space Jump</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="header">
-        <div class="header-link">
-            <a href="https://opensea.io/collection/boredbobs" target="_blank">Bored Bobs NFTs</a>
-        </div>
-        <img src="IMG_4611.PNG" alt="Your Logo" class="logo">
-        <div class="header-link">
-            <a href="https://twitter.com/Bobtoshi69" target="_blank">My X Account</a>
-        </div>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="scoreBoard">Score: <span id="score">0</span></div>
+        <div id="highScoreBoard">High Score: <span id="highScore">0</span></div>
+        <div id="gameOver" style="display: none;">Game Over! Tap to Restart</div>
     </div>
-    <div class="search-container">
-        <input type="text" id="searchQuery" class="search-bar" placeholder="Search..." onkeypress="searchOnEnter(event)">
-        <button onclick="performSearch()" class="search-button">Search</button>
-    </div>
-    <div id="results"></div>
-    <div id="pagination"></div>
-
-    <script>
-        var currentPage = 1;
-        var itemsPerPage = 10;
-
-        function performSearch(page = 1) {
-            currentPage = page;
-            var query = document.getElementById('searchQuery').value;
-            var api_key = 'AIzaSyAHZ1jgE2pzEDCFuhg2GgE-OfPDlS5ehIU'; // Replace with your actual API key
-            var cx = '454405163656-p26aqm9l183r02fbo8smqshnsgncc2q1.apps.googleusercontent.com'; // Replace with your actual Custom Search Engine ID
-            var startIndex = (page - 1) * itemsPerPage + 1;
-            var url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${api_key}&cx=${cx}&start=${startIndex}`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    displayResults(data);
-                    displayPagination(data.queries);
-                });
-        }
-
-        function displayResults(data) {
-            var resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '';
-
-            data.items.forEach(item => {
-                var element = document.createElement('div');
-                element.classList.add('search-result');
-                element.innerHTML += `<h2><a href="${item.link}" class="result-title">${item.title}</a></h2>`;
-                element.innerHTML += `<a href="${item.link}" class="result-link">${item.formattedUrl}</a>`;
-                element.innerHTML += `<p class="result-snippet">${item.snippet}</p>`;
-                resultsDiv.appendChild(element);
-            });
-        }
-
-        function displayPagination(queries) {
-            var paginationDiv = document.getElementById('pagination');
-            paginationDiv.innerHTML = '';
-
-            if (queries.request[0].startIndex > 1) {
-                var prevPage = currentPage - 1;
-                paginationDiv.innerHTML += `<button onclick="performSearch(${prevPage})">Previous</button>`;
-            }
-
-            var totalPages = Math.ceil(queries.request[0].totalResults / itemsPerPage);
-            for (var i = 1; i <= totalPages; i++) {
-                paginationDiv.innerHTML += `<button onclick="performSearch(${i})">${i}</button>`;
-            }
-
-            if (queries.request[0].startIndex + itemsPerPage - 1 < queries.request[0].totalResults) {
-                var nextPage = currentPage + 1;
-                paginationDiv.innerHTML += `<button onclick="performSearch(${nextPage})">Next</button>`;
-            }
-        }
-
-        function searchOnEnter(event) {
-            if (event.key === "Enter") {
-                performSearch();
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
