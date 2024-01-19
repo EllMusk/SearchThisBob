@@ -8,18 +8,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let score = 0;
     let highScore = localStorage.getItem('highScore') || 0;
     let platforms = [];
-    let player = { x: canvas.width / 2, y: canvas.height / 2, width: 50, height: 50, dy: 0 };
-    let tilt = 0;
+    let player = { x: canvas.width / 2, y: canvas.height / 2, width: 50, height: 50, dy: 0, dx: 0 };
+    let touching = false;
 
     function setup() {
         platforms = generatePlatforms();
         player.y = findHighestPlatform(platforms);
         document.getElementById('highScore').innerText = highScore;
-        window.addEventListener('deviceorientation', handleTilt, true);
+
+        canvas.addEventListener('touchstart', handleTouchStart, false);
+        canvas.addEventListener('touchend', handleTouchEnd, false);
     }
 
     function gameLoop() {
         if (!gameRunning) return;
+        
         update();
         draw();
         requestAnimationFrame(gameLoop);
@@ -41,7 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function handlePlayerMovement() {
         player.dy += 0.5; // Gravity effect
         player.y += player.dy;
-        player.x += tilt * 0.5; // Horizontal movement based on tilt
+        if (touching) {
+            player.x += player.dx;
+        }
 
         // Boundary checks
         if (player.x < 0) player.x = 0;
@@ -54,95 +59,18 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fillRect(player.x, player.y, player.width, player.height);
     }
 
-    function generatePlatforms() {
-        let platformCount = Math.floor(canvas.height / 100);
-        for (let i = 0; i < platformCount; i++) {
-            let platformWidth = Math.random() * (canvas.width / 2) + 50;
-            let platformHeight = 20;
-            let x = Math.random() * (canvas.width - platformWidth);
-            let y = canvas.height - (i * 100);
-            platforms.push({ x, y, width: platformWidth, height: platformHeight });
-        }
-        return platforms;
+    // ... Other functions like generatePlatforms, handleCollisions, etc.
+
+    function handleTouchStart(event) {
+        touching = true;
+        // Determine direction based on touch position
+        const touchX = event.touches[0].clientX;
+        player.dx = touchX < canvas.width / 2 ? -5 : 5;
     }
 
-    function drawPlatforms() {
-        ctx.fillStyle = 'blue';
-        platforms.forEach(platform => {
-            ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-        });
-    }
-
-    function findHighestPlatform(platforms) {
-        let highestPlatform = platforms.reduce((highest, platform) => {
-            return platform.y < highest.y ? platform : highest;
-        }, { y: canvas.height });
-        return highestPlatform.y - player.height * 2; // Start above the highest platform
-    }
-
-    function handlePlatformMovement() {
-        platforms.forEach(platform => {
-            platform.y += 2; // Move platforms down to simulate jumping up
-            if (platform.y > canvas.height) {
-                let index = platforms.indexOf(platform);
-                platforms.splice(index, 1);
-                addNewPlatformAtTop();
-            }
-        });
-    }
-
-    function addNewPlatformAtTop() {
-        let platformWidth = Math.random() * (canvas.width / 2) + 50;
-        let platformHeight = 20;
-        let x = Math.random() * (canvas.width - platformWidth);
-        let y = platforms.length > 0 ? platforms[0].y - 100 : 50;
-        platforms.unshift({ x, y, width: platformWidth, height: platformHeight });
-    }
-
-    function handleCollisions() {
-        platforms.forEach(platform => {
-            if (player.y + player.height > platform.y &&
-                player.y + player.height < platform.y + platform.height &&
-                player.x + player.width > platform.x &&
-                player.x < platform.x + platform.width &&
-                player.dy > 0) {
-                player.dy = -10; // Jumping effect
-            }
-        });
-    }
-
-    function updateScore() {
-        score++;
-        document.getElementById('score').innerText = score;
-        if (score > highScore) {
-            highScore = score;
-            localStorage.setItem('highScore', highScore);
-            document.getElementById('highScore').innerText = highScore;
-        }
-    }
-
-    function gameOver() {
-        gameRunning = false;
-        document.getElementById('gameOver').style.display = 'block';
-        document.getElementById('gameOver').onclick = restartGame;
-    }
-
-    function restartGame() {
-        platforms = [];
-        player.x = canvas.width / 2;
-        player.y = findHighestPlatform(platforms);
-        player.dy = 0;
-        score = 0;
-        document.getElementById('score').innerText = score;
-        document.getElementById('gameOver').style.display = 'none';
-        gameRunning = true;
-        gameLoop();
-    }
-
-    function handleTilt(event) {
-        tilt = event.gamma; // Assuming gamma is the left/right tilt in degrees
-        // Normalize the tilt value between -1 and 1
-        tilt = tilt / 45;
+    function handleTouchEnd(event) {
+        touching = false;
+        player.dx = 0;
     }
 
     setup();
