@@ -150,4 +150,4 @@ canvas.addEventListener('touchend', function(e) {
 });
 
 // Add restart button to HTML
-document.body.innerHTML += '<button id="restartButton" onclick="restartGame()" style=“position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;”>Restart’;
+document.body.innerHTML += '<button id="restartButton" onclick="restartGame()" style="position: absolute; top: 50%; left: 50
