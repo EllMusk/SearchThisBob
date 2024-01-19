@@ -18,7 +18,7 @@ function init() {
     movingRight = false;
     movingLeft = false;
     generatePlatforms();
-    platforms[0] = { x: player.x - 30, y: height - 20, width: 60, height: 10 }; // Ensure a platform is right under the player at start
+    platforms[0] = { x: player.x - 30, y: height - 20, width: 60, height: 10 }; 
     gameLoop();
 }
 
@@ -27,7 +27,7 @@ function generatePlatforms() {
     for (let i = 0; i < platformCount; i++) {
         let platform = {
             x: Math.random() * (width - 60),
-            y: height - i * 100 - 100, // Adjust platform generation to start above the screen
+            y: height - i * 100 - 100,
             width: 60,
             height: 10
         };
