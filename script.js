@@ -4,14 +4,11 @@ const ctx = canvas.getContext('2d');
 const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
 
-// Game variables
 let player, platforms, score, gravity, isGameOver;
 
-// Player properties
 const playerSize = 30;
 const jumpHeight = 15;
 
-// Initialize game elements
 function init() {
     player = { x: width / 2, y: height - playerSize * 2, dy: 0 };
     platforms = [];
@@ -22,7 +19,6 @@ function init() {
     gameLoop();
 }
 
-// Generate platforms
 function generatePlatforms() {
     const platformCount = Math.floor(height / 100);
     for (let i = 0; i < platformCount; i++) {
@@ -36,7 +32,6 @@ function generatePlatforms() {
     }
 }
 
-// Game loop
 function gameLoop() {
     ctx.clearRect(0, 0, width, height);
     if (!isGameOver) {
@@ -51,12 +46,10 @@ function gameLoop() {
     }
 }
 
-// Update player position
 function updatePlayer() {
     player.dy += gravity;
     player.y += player.dy;
 
-    // Jump logic
     if (player.y <= height / 2) {
         platforms.forEach(p => {
             p.y -= player.dy;
@@ -68,13 +61,11 @@ function updatePlayer() {
         });
     }
 
-    // Game over condition
     if (player.y > height || player.y + playerSize < 0) {
         isGameOver = true;
     }
 }
 
-// Update platforms
 function updatePlatforms() {
     platforms.forEach(p => {
         ctx.fillStyle = '#8B4513';
@@ -82,7 +73,6 @@ function updatePlatforms() {
     });
 }
 
-// Check collision with platforms
 function checkCollision() {
     platforms.forEach(p => {
         if (player.x < p.x + p.width &&
@@ -94,7 +84,6 @@ function checkCollision() {
     });
 }
 
-// Draw player
 function drawPlayer() {
     ctx.fillStyle = '#FF69B4';
     ctx.beginPath();
@@ -103,7 +92,6 @@ function drawPlayer() {
     ctx.fill();
 }
 
-// Draw platforms
 function drawPlatforms() {
     platforms.forEach(p => {
         ctx.fillStyle = '#8B4513';
@@ -111,7 +99,6 @@ function drawPlatforms() {
     });
 }
 
-// Display game over message
 function displayGameOver() {
     ctx.fillStyle = 'black';
     ctx.font = '36px Arial';
@@ -120,10 +107,8 @@ function displayGameOver() {
     ctx.fillText('Score: ' + score, width / 2, height / 2 + 40);
 }
 
-// Touch controls
 canvas.addEventListener('touchstart', function(e) {
     player.x = e.touches[0].clientX;
 });
 
-// Initialize game
 init();
