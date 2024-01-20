@@ -19,7 +19,7 @@
             display: none; /* Hidden initially */
             background-color: black;
         }
-        #startMenu, #gameOver, #leaderboard {
+        .menu {
             display: none;
             position: absolute;
             width: 100%;
@@ -42,20 +42,20 @@
     </style>
 </head>
 <body>
-    <div id="startMenu">
+    <div id="startMenu" class="menu">
         <h1>Snake Game</h1>
-        <button class="button" onclick="startGame()">Start Game</button>
-        <button class="button" onclick="showLeaderboard()">Leaderboard</button>
+        <button id="startButton" class="button">Start Game</button>
+        <button id="leaderboardButton" class="button">Leaderboard</button>
     </div>
     <canvas id="gameCanvas"></canvas>
-    <div id="gameOver">
+    <div id="gameOver" class="menu">
         <h1>Game Over</h1>
         <input type="text" id="playerName" placeholder="Enter Name" />
-        <button class="button" onclick="saveScore()">Submit Score</button>
+        <button id="submitScoreButton" class="button">Submit Score</button>
     </div>
-    <div id="leaderboard">
+    <div id="leaderboard" class="menu">
         <!-- Leaderboard entries will be dynamically inserted here -->
-        <button class="button" onclick="backToMainMenu()">Back to Main Menu</button>
+        <button id="backButton" class="button">Back to Main Menu</button>
     </div>
     <script src="script.js"></script>
 </body>
