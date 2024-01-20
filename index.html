@@ -19,7 +19,7 @@
             display: none; /* Hidden initially */
             background-color: black;
         }
-        #startMenu, #gameOver {
+        #startMenu, #gameOver, #leaderboard {
             display: none;
             position: absolute;
             width: 100%;
@@ -39,10 +39,6 @@
             color: white;
             cursor: pointer;
         }
-        #leaderboard {
-            max-height: 200px;
-            overflow-y: auto;
-        }
     </style>
 </head>
 <body>
@@ -57,7 +53,7 @@
         <input type="text" id="playerName" placeholder="Enter Name" />
         <button class="button" onclick="saveScore()">Submit Score</button>
     </div>
-    <div id="leaderboard" style="display:none;"></div>
+    <div id="leaderboard"></div>
     <script src="script.js"></script>
 </body>
 </html>
