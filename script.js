@@ -9,21 +9,30 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let snake;
     let fruit;
-    let score = 0;
-    
-    function showStartMenu() {
-        document.getElementById('startMenu').style.display = 'flex';
-        document.getElementById('gameCanvas').style.display = 'none';
-        document.getElementById('gameOver').style.display = 'none';
-    }
+    let score;
 
     function startGame() {
         document.getElementById('startMenu').style.display = 'none';
         document.getElementById('gameCanvas').style.display = 'block';
-        score = 0;
         snake = new Snake();
         fruit = new Fruit();
         fruit.pickLocation();
+        score = 0;
+        window.setInterval(() => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            fruit.draw();
+            snake.update();
+            snake.draw();
+
+            if (snake.eat(fruit)) {
+                fruit.pickLocation();
+            }
+
+            if (snake.checkCollision()) {
+                gameOver();
+            }
+
+        }, 250);
     }
 
     function gameOver() {
@@ -52,6 +61,40 @@ document.addEventListener("DOMContentLoaded", function() {
         leaderboardDiv.style.display = 'block';
     }
 
+    window.addEventListener('keydown', e => {
+        const direction = e.key.replace('Arrow', '');
+        snake.changeDirection(direction);
+    });
+
+    // Touch control implementation
+    let touchStartX, touchStartY;
+    canvas.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+        e.preventDefault();
+    });
+
+    canvas.addEventListener('touchmove', function(e) {
+        e.preventDefault(); // Prevent scrolling and zoom
+    });
+
+    canvas.addEventListener('touchend', function(e) {
+        const touchEndX = e.changedTouches[0].screenX;
+        const touchEndY = e.changedTouches[0].screenY;
+        const xDiff = touchStartX - touchEndX;
+        const yDiff = touchStartY - touchEndY;
+
+        if (Math.abs(xDiff) > Math.abs(yDiff)) { // Horizontal swipe
+            if (xDiff > 0) { snake.changeDirection('Left'); } 
+            else { snake.changeDirection('Right'); }
+        } else { // Vertical swipe
+            if (yDiff > 0) { snake.changeDirection('Up'); } 
+            else { snake.changeDirection('Down'); }
+        }
+        e.preventDefault();
+    });
+
+    // Snake constructor
     function Snake() {
         this.x = 0;
         this.y = 0;
@@ -72,6 +115,7 @@ document.addEventListener("DOMContentLoaded", function() {
             for (let i = 0; i < this.tail.length - 1; i++) {
                 this.tail[i] = this.tail[i + 1];
             }
+
             if (this.total >= 1) {
                 this.tail[this.total - 1] = { x: this.x, y: this.y };
             }
@@ -133,14 +177,14 @@ document.addEventListener("DOMContentLoaded", function() {
         this.checkCollision = function() {
             for (var i = 0; i < this.tail.length; i++) {
                 if (this.x === this.tail[i].x && this.y === this.tail[i].y) {
-                    this.total = 0;
-                    this.tail = [];
-                    gameOver();
+                    return true;
                 }
             }
+            return false;
         }
     }
 
+    // Fruit constructor
     function Fruit() {
         this.x;
         this.y;
@@ -156,50 +200,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Game loop
-    window.setInterval(() => {
-        if (document.getElementById('gameCanvas').style.display === 'block') {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            fruit.draw();
-            snake.update();
-            snake.draw();
-
-            if (snake.eat(fruit)) {
-                fruit.pickLocation();
-            }
-
-            snake.checkCollision();
-        }
-    }, 250);
-
-    // Touch control implementation
-    let touchStartX, touchStartY;
-    canvas.addEventListener('touchstart', function(e) {
-        touchStartX = e.changedTouches[0].screenX;
-        touchStartY = e.changedTouches[0].screenY;
-        e.preventDefault();
-    });
-
-    canvas.addEventListener('touchmove', function(e) {
-        e.preventDefault(); // Prevent scrolling and zoom
-    });
-
-    canvas.addEventListener('touchend', function(e) {
-        const touchEndX = e.changedTouches[0].screenX;
-        const touchEndY = e.changedTouches[0].screenY;
-        const xDiff = touchStartX - touchEndX;
-        const yDiff = touchStartY - touchEndY;
-
-        if (Math.abs(xDiff) > Math.abs(yDiff)) { // Horizontal swipe
-            if (xDiff > 0) { snake.changeDirection('Left'); } 
-            else { snake.changeDirection('Right'); }
-        } else { // Vertical swipe
-            if (yDiff > 0) { snake.changeDirection('Up'); } 
-            else { snake.changeDirection('Down'); }
-        }
-        e.preventDefault();
-    });
-
-    // Show start menu
-    showStartMenu();
+    // Show the start menu initially
+    document.getElementById('startMenu').style.display = 'flex';
 });
