@@ -2,7 +2,7 @@ let canvas, ctx, scale, rows, columns;
 let snake, fruit, score;
 let gameInterval;
 let fruitImage = new Image();
-fruitImage.src = 'path/to/your/fruit-image.png';  // Replace with the path to your fruit image
+fruitImage.src = IMG_4610.jpg;  
 
 document.addEventListener("DOMContentLoaded", function() {
     canvas = document.getElementById('gameCanvas');
