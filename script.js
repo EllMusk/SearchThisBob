@@ -67,6 +67,11 @@ function showLeaderboard() {
     leaderboardDiv.style.display = 'block';
 }
 
+function backToMainMenu() {
+    document.getElementById('leaderboard').style.display = 'none';
+    document.getElementById('startMenu').style.display = 'flex';
+}
+
 function Snake() {
     this.x = 0;
     this.y = 0;
