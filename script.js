@@ -6,95 +6,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const scale = 20;
     const rows = canvas.height / scale;
     const columns = canvas.width / scale;
-
     let snake;
     let fruit;
-    let score;
+    let score = 0;
+    let gameInterval;
 
-    function startGame() {
-        document.getElementById('startMenu').style.display = 'none';
-        document.getElementById('gameCanvas').style.display = 'block';
-        snake = new Snake();
-        fruit = new Fruit();
-        fruit.pickLocation();
-        score = 0;
-        window.setInterval(() => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            fruit.draw();
-            snake.update();
-            snake.draw();
-
-            if (snake.eat(fruit)) {
-                fruit.pickLocation();
-            }
-
-            if (snake.checkCollision()) {
-                gameOver();
-            }
-
-        }, 250);
-    }
-
-    function gameOver() {
-        document.getElementById('gameOver').style.display = 'flex';
-        document.getElementById('gameCanvas').style.display = 'none';
-    }
-
-    function saveScore() {
-        const name = document.getElementById('playerName').value;
-        const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-        leaderboard.push({ name, score });
-        localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-        showLeaderboard();
-    }
-
-    function showLeaderboard() {
-        const leaderboardDiv = document.getElementById('leaderboard');
-        const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-        leaderboardDiv.innerHTML = '<h2>Leaderboard</h2>';
-        leaderboard.sort((a, b) => b.score - a.score);
-        leaderboard.forEach(entry => {
-            leaderboardDiv.innerHTML += `<p>${entry.name}: ${entry.score}</p>`;
-        });
-        document.getElementById('startMenu').style.display = 'none';
-        document.getElementById('gameOver').style.display = 'none';
-        leaderboardDiv.style.display = 'block';
-    }
-
-    window.addEventListener('keydown', e => {
-        const direction = e.key.replace('Arrow', '');
-        snake.changeDirection(direction);
-    });
-
-    // Touch control implementation
-    let touchStartX, touchStartY;
-    canvas.addEventListener('touchstart', function(e) {
-        touchStartX = e.changedTouches[0].screenX;
-        touchStartY = e.changedTouches[0].screenY;
-        e.preventDefault();
-    });
-
-    canvas.addEventListener('touchmove', function(e) {
-        e.preventDefault(); // Prevent scrolling and zoom
-    });
-
-    canvas.addEventListener('touchend', function(e) {
-        const touchEndX = e.changedTouches[0].screenX;
-        const touchEndY = e.changedTouches[0].screenY;
-        const xDiff = touchStartX - touchEndX;
-        const yDiff = touchStartY - touchEndY;
-
-        if (Math.abs(xDiff) > Math.abs(yDiff)) { // Horizontal swipe
-            if (xDiff > 0) { snake.changeDirection('Left'); } 
-            else { snake.changeDirection('Right'); }
-        } else { // Vertical swipe
-            if (yDiff > 0) { snake.changeDirection('Up'); } 
-            else { snake.changeDirection('Down'); }
-        }
-        e.preventDefault();
-    });
-
-    // Snake constructor
     function Snake() {
         this.x = 0;
         this.y = 0;
@@ -139,28 +55,20 @@ document.addEventListener("DOMContentLoaded", function() {
         this.changeDirection = function(direction) {
             switch(direction) {
                 case 'Up':
-                    if (this.ySpeed === 0) {
-                        this.xSpeed = 0;
-                        this.ySpeed = -scale * 1;
-                    }
+                    this.xSpeed = 0;
+                    this.ySpeed = -scale * 1;
                     break;
                 case 'Down':
-                    if (this.ySpeed === 0) {
-                        this.xSpeed = 0;
-                        this.ySpeed = scale * 1;
-                    }
+                    this.xSpeed = 0;
+                    this.ySpeed = scale * 1;
                     break;
                 case 'Left':
-                    if (this.xSpeed === 0) {
-                        this.xSpeed = -scale * 1;
-                        this.ySpeed = 0;
-                    }
+                    this.xSpeed = -scale * 1;
+                    this.ySpeed = 0;
                     break;
                 case 'Right':
-                    if (this.xSpeed === 0) {
-                        this.xSpeed = scale * 1;
-                        this.ySpeed = 0;
-                    }
+                    this.xSpeed = scale * 1;
+                    this.ySpeed = 0;
                     break;
             }
         };
@@ -184,14 +92,13 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Fruit constructor
     function Fruit() {
         this.x;
         this.y;
 
         this.pickLocation = function() {
-            this.x = (Math.floor(Math.random() * columns) + 1) * scale;
-            this.y = (Math.floor(Math.random() * rows) + 1) * scale;
+            this.x = (Math.floor(Math.random() * columns - 1) + 1) * scale;
+            this.y = (Math.floor(Math.random() * rows - 1) + 1) * scale;
         }
 
         this.draw = function() {
@@ -200,6 +107,86 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Show the start menu initially
+    function gameLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        fruit.draw();
+        snake.update();
+        snake.draw();
+
+        if (snake.eat(fruit)) {
+            fruit.pickLocation();
+        }
+
+        if (snake.checkCollision()) {
+            gameOver();
+        }
+    }
+
+    function startGame() {
+        document.getElementById('startMenu').style.display = 'none';
+        canvas.style.display = 'block';
+        score = 0;
+        snake = new Snake();
+        fruit = new Fruit();
+        fruit.pickLocation();
+        if (gameInterval) clearInterval(gameInterval);
+        gameInterval = setInterval(gameLoop, 250);
+    }
+
+    function gameOver() {
+        clearInterval(gameInterval);
+        document.getElementById('gameOver').style.display = 'flex';
+        canvas.style.display = 'none';
+    }
+
+    function saveScore() {
+        const name = document.getElementById('playerName').value;
+        const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+        leaderboard.push({ name, score });
+        localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+        showLeaderboard();
+    }
+
+    function showLeaderboard() {
+        const leaderboardDiv = document.getElementById('leaderboard');
+        const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+        leaderboardDiv.innerHTML = '<h2>Leaderboard</h2>';
+        leaderboard.sort((a, b) => b.score - a.score);
+        leaderboard.forEach(entry => {
+            leaderboardDiv.innerHTML += `<p>${entry.name}: ${entry.score}</p>`;
+        });
+        document.getElementById('startMenu').style.display = 'none';
+        document.getElementById('gameOver').style.display = 'none';
+        leaderboardDiv.style.display = 'block';
+    }
+
+    window.addEventListener('keydown', e => {
+        const direction = e.key.replace('Arrow', '');
+        snake.changeDirection(direction);
+    });
+
+    let touchStartX, touchStartY;
+    canvas.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+        e.preventDefault();
+    });
+
+    canvas.addEventListener('touchend', function(e) {
+        const touchEndX = e.changedTouches[0].screenX;
+        const touchEndY = e.changedTouches[0].screenY;
+        const xDiff = touchStartX - touchEndX;
+        const yDiff = touchStartY - touchEndY;
+
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+            if (xDiff > 0) { snake.changeDirection('Left'); } 
+            else { snake.changeDirection('Right'); }
+        } else {
+            if (yDiff > 0) { snake.changeDirection('Up'); } 
+            else { snake.changeDirection('Down'); }
+        }
+        e.preventDefault();
+    });
+
     document.getElementById('startMenu').style.display = 'flex';
 });
