@@ -1,6 +1,8 @@
 let canvas, ctx, scale, rows, columns;
 let snake, fruit, score;
 let gameInterval;
+let fruitImage = new Image();
+fruitImage.src = 'path/to/your/fruit-image.png';  // Replace with the path to your fruit image
 
 document.addEventListener("DOMContentLoaded", function() {
     canvas = document.getElementById('gameCanvas');
@@ -79,6 +81,7 @@ function Snake() {
         if (this.x === fruit.x && this.y === fruit.y) {
             this.total++;
             score++;
+            increaseSpeed();
             return true;
         }
         return false;
@@ -95,17 +98,13 @@ function Snake() {
 }
 
 function Fruit() {
-    this.x;
-    this.y;
-
     this.pickLocation = function() {
         this.x = (Math.floor(Math.random() * columns - 1) + 1) * scale;
         this.y = (Math.floor(Math.random() * rows - 1) + 1) * scale;
     };
 
     this.draw = function() {
-        ctx.fillStyle = "#4cafab";
-        ctx.fillRect(this.x, this.y, scale, scale);
+        ctx.drawImage(fruitImage, this.x, this.y, scale, scale);
     };
 }
 
@@ -122,6 +121,11 @@ function gameLoop() {
     if (snake.checkCollision()) {
         gameOver();
     }
+}
+
+function increaseSpeed() {
+    if (gameInterval) clearInterval(gameInterval);
+    gameInterval = setInterval(gameLoop, Math.max(100, 250 - (score * 10)));
 }
 
 function startGame() {
