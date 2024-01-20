@@ -2,24 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Snake Game</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        body, html {
             margin: 0;
-            background-color: #f0f0f0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+            background-color: black;
         }
         canvas {
-            border: 1px solid #000;
+            display: block;
+            background-color: black;
         }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="600" height="600"></canvas>
+    <canvas id="gameCanvas"></canvas>
     <script src="script.js"></script>
 </body>
 </html>
