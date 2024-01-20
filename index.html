@@ -16,7 +16,7 @@
             text-align: center;
         }
         #gameCanvas {
-            display: none;
+            display: none; /* Hidden initially */
             background-color: black;
         }
         #startMenu, #gameOver {
@@ -51,13 +51,13 @@
         <button class="button" onclick="startGame()">Start Game</button>
         <button class="button" onclick="showLeaderboard()">Leaderboard</button>
     </div>
+    <canvas id="gameCanvas"></canvas>
     <div id="gameOver">
         <h1>Game Over</h1>
         <input type="text" id="playerName" placeholder="Enter Name" />
         <button class="button" onclick="saveScore()">Submit Score</button>
     </div>
-    <canvas id="gameCanvas"></canvas>
-    <div id="leaderboard"></div>
+    <div id="leaderboard" style="display:none;"></div>
     <script src="script.js"></script>
 </body>
 </html>
