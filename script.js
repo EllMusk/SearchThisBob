@@ -10,67 +10,8 @@ document.addEventListener("DOMContentLoaded", function() {
     scale = 20;
     rows = canvas.height / scale;
     columns = canvas.width / scale;
-    
     document.getElementById('startMenu').style.display = 'flex';
 });
-
-function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    fruit.draw();
-    snake.update();
-    snake.draw();
-
-    if (snake.eat(fruit)) {
-        fruit.pickLocation();
-    }
-
-    if (snake.checkCollision()) {
-        gameOver();
-    }
-}
-
-function startGame() {
-    document.getElementById('startMenu').style.display = 'none';
-    canvas.style.display = 'block';
-    score = 0;
-    snake = new Snake();
-    fruit = new Fruit();
-    fruit.pickLocation();
-    if (gameInterval) clearInterval(gameInterval);
-    gameInterval = setInterval(gameLoop, 250);
-}
-
-function gameOver() {
-    clearInterval(gameInterval);
-    document.getElementById('gameOver').style.display = 'flex';
-    canvas.style.display = 'none';
-}
-
-function saveScore() {
-    const name = document.getElementById('playerName').value;
-    const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-    leaderboard.push({ name, score });
-    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-    showLeaderboard();
-}
-
-function showLeaderboard() {
-    const leaderboardDiv = document.getElementById('leaderboard');
-    const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-    leaderboardDiv.innerHTML = '<h2>Leaderboard</h2>';
-    leaderboard.sort((a, b) => b.score - a.score);
-    leaderboard.forEach(entry => {
-        leaderboardDiv.innerHTML += `<p>${entry.name}: ${entry.score}</p>`;
-    });
-    document.getElementById('startMenu').style.display = 'none';
-    document.getElementById('gameOver').style.display = 'none';
-    leaderboardDiv.style.display = 'block';
-}
-
-function backToMainMenu() {
-    document.getElementById('leaderboard').style.display = 'none';
-    document.getElementById('startMenu').style.display = 'flex';
-}
 
 function Snake() {
     this.x = 0;
@@ -166,6 +107,63 @@ function Fruit() {
         ctx.fillStyle = "#4cafab";
         ctx.fillRect(this.x, this.y, scale, scale);
     };
+}
+
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    fruit.draw();
+    snake.update();
+    snake.draw();
+
+    if (snake.eat(fruit)) {
+        fruit.pickLocation();
+    }
+
+    if (snake.checkCollision()) {
+        gameOver();
+    }
+}
+
+function startGame() {
+    document.getElementById('startMenu').style.display = 'none';
+    canvas.style.display = 'block';
+    score = 0;
+    snake = new Snake();
+    fruit = new Fruit();
+    fruit.pickLocation();
+    if (gameInterval) clearInterval(gameInterval);
+    gameInterval = setInterval(gameLoop, 250);
+}
+
+function gameOver() {
+    clearInterval(gameInterval);
+    document.getElementById('gameOver').style.display = 'flex';
+    canvas.style.display = 'none';
+}
+
+function saveScore() {
+    const name = document.getElementById('playerName').value;
+    const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+    leaderboard.push({ name, score });
+    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+    showLeaderboard();
+}
+
+function showLeaderboard() {
+    const leaderboardDiv = document.getElementById('leaderboard');
+    const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+    leaderboardDiv.innerHTML = '<h2>Leaderboard</h2>';
+    leaderboard.sort((a, b) => b.score - a.score);
+    leaderboard.forEach(entry => {
+        leaderboardDiv.innerHTML += `<p>${entry.name}: ${entry.score}</p>`;
+    });
+    leaderboardDiv.innerHTML += '<button class="button" onclick="backToMainMenu()">Back to Main Menu</button>';
+    leaderboardDiv.style.display = 'block';
+}
+
+function backToMainMenu() {
+    document.getElementById('leaderboard').style.display = 'none';
+    document.getElementById('startMenu').style.display = 'flex';
 }
 
 window.addEventListener('keydown', e => {
